@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.DS_Store
+.env
+
+# Generated — recreated by running setup.py
+data/msme_data.csv
+model/rf_model.joblib
+model/feature_columns.json
+
+# Ollama binary downloaded by setup.py (200MB+, not committed)
+bin/
