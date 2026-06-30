@@ -19,6 +19,91 @@ An AI-powered credit risk screening tool for Indian e-commerce MSMEs. Uses alter
 
 ## Getting Started
 
+You can run this project either using **VS Code** (recommended, beginner-friendly) or the **terminal directly**. Both paths are covered below.
+
+---
+
+## Option A — Using VS Code (Recommended)
+
+### A1 — Install VS Code
+
+Download and install from [code.visualstudio.com](https://code.visualstudio.com/).
+
+### A2 — Install the Python Extension
+
+1. Open VS Code
+2. Click the **Extensions** icon in the left sidebar (or press `Ctrl+Shift+X` / `Cmd+Shift+X`)
+3. Search for **Python** and install the one by Microsoft
+
+### A3 — Clone and Open the Repo
+
+1. Press `Ctrl+Shift+P` (Windows/Linux) or `Cmd+Shift+P` (macOS) to open the Command Palette
+2. Type **Git: Clone** and press Enter
+3. Paste the repo URL: `https://github.com/mirzazaheer/credit_risk.git`
+4. Choose a folder to save it in, then click **Open** when prompted
+
+Alternatively, clone via terminal first and then open:
+```bash
+git clone https://github.com/mirzazaheer/credit_risk.git
+code credit_risk
+```
+
+### A4 — Select the Python Interpreter
+
+1. Press `Ctrl+Shift+P` / `Cmd+Shift+P`
+2. Type **Python: Select Interpreter**
+3. Choose **Python 3.10** or higher from the list
+   - If no Python appears, install it from [python.org](https://www.python.org/downloads/) and restart VS Code
+
+### A5 — Open the Integrated Terminal
+
+Press `` Ctrl+` `` (backtick) or go to **Terminal → New Terminal** in the menu bar.
+All commands below are run in this terminal.
+
+### A6 — Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+> On macOS/Linux use `pip3` if `pip` is not found.
+
+### A7 — Run Setup (One-Time)
+
+```bash
+python setup.py
+```
+> On macOS/Linux use `python3 setup.py`
+
+This downloads and sets up everything automatically — Ollama, Llama 3 model, training data, and the ML model. It will take around **10 minutes on first run** due to the ~4 GB model download.
+
+### A8 — Launch the App from VS Code
+
+You need **two terminals** running at the same time.
+
+**Open a second terminal** in VS Code by clicking the **+** button in the terminal panel.
+
+**Terminal 1** — Start the AI server (keep this open):
+
+macOS / Linux:
+```bash
+bin/ollama serve
+```
+Windows:
+```bat
+bin\ollama.exe serve
+```
+
+**Terminal 2** — Start the web app:
+```bash
+streamlit run app.py
+```
+
+VS Code may show a popup — click **Open in Browser**, or open manually: **http://localhost:8501**
+
+---
+
+## Option B — Terminal Only
+
 ### Before You Begin — Check Your Python Version
 
 ```bash
@@ -30,7 +115,7 @@ You need **Python 3.10 or higher**. Download from [python.org](https://www.pytho
 
 ---
 
-### Step 1 — Clone the Repository
+### B1 — Clone the Repository
 
 ```bash
 git clone https://github.com/mirzazaheer/credit_risk.git
@@ -39,7 +124,7 @@ cd credit_risk
 
 ---
 
-### Step 2 — Install Python Dependencies
+### B2 — Install Python Dependencies
 
 **macOS / Linux:**
 ```bash
@@ -55,7 +140,7 @@ pip install -r requirements.txt
 
 ---
 
-### Step 3 — Run Setup (One-Time Only)
+### B3 — Run Setup (One-Time Only)
 
 **macOS / Linux:**
 ```bash
@@ -80,7 +165,7 @@ python setup.py
 
 ---
 
-### Step 4 — Start Ollama and Launch the App
+### B4 — Start Ollama and Launch the App
 
 You need **two terminals** open at the same time.
 
