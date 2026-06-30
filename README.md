@@ -1,123 +1,219 @@
 # E-commerce MSME Credit Risk Screener
 **C2_AIB0326 — Team 1**
 
-An AI-powered credit risk screening tool for Indian e-commerce MSMEs using alternative data signals — GST compliance, marketplace performance, and payment behaviour — instead of traditional credit scores.
+An AI-powered credit risk screening tool for Indian e-commerce MSMEs. Uses alternative data signals — GST compliance, marketplace performance, and payment behaviour — to produce a credit risk score, explainable factors, and a human-readable lending recommendation.
 
 ---
 
-## What it does
+## What It Does
 
-1. Takes MSME business data as input (GST filings, seller ratings, payment history, etc.)
-2. Computes a **Credit Risk Score (0–100)** using a trained Random Forest model
-3. Classifies into **Low / Medium / High Risk** tier
-4. Shows key **positive and negative factors** driving the score
-5. Generates a **human-readable credit assessment report** via Llama 3 (local LLM)
+| Output | Description |
+|---|---|
+| Credit Risk Score | 0–100 composite score |
+| Risk Tier | Low (80–100) / Medium (60–79) / High (<60) |
+| Key Factors | Which inputs helped or hurt the score |
+| AI Report | Full credit assessment narrative via Llama 3 |
+| Download | Exportable .txt report for lenders |
 
 ---
 
-## Quick Start
+## Getting Started
 
-### Prerequisites
-- Python 3.10 or higher
-- Internet connection for first-time setup (Ollama ~200 MB + Llama 3 model ~4 GB)
+### Before You Begin — Check Your Python Version
 
-### Step 1 — Install Python dependencies
 ```bash
-pip install -r requirements.txt
+python --version       # Windows
+python3 --version      # macOS / Linux
 ```
 
-### Step 2 — Run setup (one-time)
-```bash
-python setup.py
-```
-This automatically:
-- Generates 1,200 synthetic MSME training records
-- Trains the Random Forest credit risk model (~30 seconds)
-- Downloads Ollama to `bin/` (LLM runtime, ~200 MB)
-- Pulls the Llama 3 model (~4 GB) for AI narrative reports
+You need **Python 3.10 or higher**. Download from [python.org](https://www.python.org/downloads/) if needed.
 
-To skip the LLM step (app still works, uses rule-based reports):
+---
+
+### Step 1 — Clone the Repository
+
 ```bash
-python setup.py --skip-ollama
+git clone https://github.com/mirzazaheer/credit_risk.git
+cd credit_risk
 ```
 
-### Step 3 — Launch the app
+---
+
+### Step 2 — Install Python Dependencies
 
 **macOS / Linux:**
 ```bash
-bin/ollama serve          # Terminal 1 — keep open
-streamlit run app.py      # Terminal 2
+pip3 install -r requirements.txt
 ```
 
 **Windows:**
 ```bat
+pip install -r requirements.txt
+```
+
+> If you see a `pip: command not found` error, use `python -m pip install -r requirements.txt` instead.
+
+---
+
+### Step 3 — Run Setup (One-Time Only)
+
+**macOS / Linux:**
+```bash
+python3 setup.py
+```
+
+**Windows:**
+```bat
+python setup.py
+```
+
+`setup.py` does the following automatically — no manual steps needed:
+
+| Step | What happens | Time |
+|---|---|---|
+| 1 | Generates 1,200 synthetic MSME training records | ~5 seconds |
+| 2 | Trains the Random Forest credit risk model | ~30 seconds |
+| 3 | Downloads Ollama (local LLM runtime) | ~200 MB |
+| 4 | Pulls the Llama 3 model for AI reports | ~4 GB |
+
+> **Slow internet or limited storage?** Skip the LLM download with `python setup.py --skip-ollama`. The app will still work and use a structured rule-based report instead of AI narrative.
+
+---
+
+### Step 4 — Start Ollama and Launch the App
+
+You need **two terminals** open at the same time.
+
+**Terminal 1 — Start the Ollama LLM server (keep this running):**
+
+macOS / Linux:
+```bash
+bin/ollama serve
+```
+Windows:
+```bat
 bin\ollama.exe serve
+```
+
+> If you already have Ollama installed on your system, run `ollama serve` instead.
+
+**Terminal 2 — Launch the web app:**
+
+```bash
 streamlit run app.py
 ```
 
-Open **http://localhost:8501** in your browser.
+Then open your browser and go to: **http://localhost:8501**
 
-> If Ollama is already installed system-wide, use `ollama serve` instead of `bin/ollama serve`.
+---
 
-> Without Ollama running the app still works — it falls back to a structured rule-based credit report automatically.
+## Troubleshooting
+
+**`python3: command not found` on Windows**
+Use `python` instead of `python3`. Windows typically uses `python`.
+
+**`pip: command not found`**
+Run `python -m pip install -r requirements.txt` (or `python3 -m pip ...` on macOS/Linux).
+
+**`streamlit: command not found`**
+Run `python -m streamlit run app.py` (or `python3 -m streamlit run app.py`).
+
+**App loads but shows a rule-based report instead of AI narrative**
+Ollama is not running. Open a terminal, navigate to the project folder, and run `bin/ollama serve` (or `bin\ollama.exe serve` on Windows). Keep it running and refresh the app.
+
+**Ollama download fails (SSL error)**
+`setup.py` automatically retries with a relaxed SSL mode. If it still fails, download Ollama manually from [ollama.com/download](https://ollama.com/download), install it, then re-run `python setup.py`.
+
+**App crashes with a module import error**
+Make sure you ran `pip install -r requirements.txt` before `python setup.py`, and that you are in the `credit_risk/` directory when running commands.
+
+**Port 8501 already in use**
+Run `streamlit run app.py --server.port 8502` and open `http://localhost:8502` instead.
 
 ---
 
 ## Project Structure
 
 ```
-CREDIT_RISK/
+credit_risk/
+├── app.py                       # Streamlit web UI (main entry point)
+├── setup.py                     # One-command bootstrap — run this first
+├── requirements.txt             # Python package dependencies
+│
 ├── data/
-│   └── generate_synthetic.py   # Synthetic MSME dataset generator
+│   └── generate_synthetic.py   # Generates synthetic MSME dataset
+│
 ├── features/
-│   └── engineer.py             # GST / Payment / Marketplace score computation
+│   └── engineer.py             # Computes GST, Payment, Marketplace scores
+│
 ├── model/
-│   ├── train.py                # Random Forest training
-│   ├── predict.py              # Inference pipeline
-│   └── explainer.py            # Feature importance explainability
-├── llm/
-│   └── report_generator.py     # Llama 3 (Ollama) narrative report generator
-├── app.py                      # Streamlit web UI
-├── setup.py                    # One-command bootstrap (run once after cloning)
-└── requirements.txt
+│   ├── train.py                # Trains the Random Forest classifier
+│   ├── predict.py              # Runs inference on new MSME input
+│   └── explainer.py            # Feature importance analysis
+│
+└── llm/
+    └── report_generator.py     # Llama 3 (Ollama) narrative report generator
 ```
 
----
-
-## Data Sources (this prototype)
-
-Since real-time GST/marketplace APIs require institutional access, this prototype uses **synthetic data** that mirrors realistic MSME profiles across three risk cohorts. This is consistent with the project charter (Section 6 — Risks/Limitations).
-
-In production, the same pipeline would ingest data from:
-- GST Portal (`services.gst.gov.in`)
-- Udyam MSME Registration (`udyamregistration.gov.in`)
-- Marketplace seller dashboards (Amazon, Flipkart, Myntra)
-- Payment/invoice records
+Files generated by `setup.py` (not committed to the repo, recreated on each machine):
+```
+data/msme_data.csv              # Generated training dataset
+model/rf_model.joblib           # Trained model file
+model/feature_columns.json      # Feature list used by the model
+bin/ollama  (or ollama.exe)     # Ollama binary
+```
 
 ---
 
 ## System Architecture
 
 ```
-MSME Input Data
-      |
-      v
-Feature Engineering (GST + Payment + Marketplace scores)
-      |
-      v
-Random Forest Classifier  ──►  Risk Score (0–100) + Tier
-      |
-      v
-Feature Importance Explainer  ──►  Positive / Negative Factors
-      |
-      v
-Llama 3 (Ollama)  ──►  Human-readable Credit Assessment Report
+MSME Input Data  (entered via web form)
+        |
+        v
+Feature Engineering
+(GST Compliance Score + Payment Behaviour Score + Marketplace Performance Score)
+        |
+        v
+Random Forest Classifier
+        |
+        +──────────────────────────+
+        v                          v
+Risk Score (0–100) + Tier    Feature Importance Explainer
+                                   |
+                             Positive / Negative Factors
+        |                          |
+        +──────────────────────────+
+        v
+Llama 3 via Ollama  ──►  AI Credit Assessment Report
+        |
+        v
+Final Output: Score + Tier + Factors + Report + Download
 ```
 
 ---
 
-## Requirements
+## About the Data
 
-- Python 3.10–3.13 recommended (3.14 works with minor package warnings)
-- No paid API keys needed
-- Ollama optional (for AI narrative reports)
+Real-time data from GST Portal, marketplace APIs, and SIDBI/CRISIL requires institutional access. This prototype generates **synthetic MSME data** across three realistic risk cohorts (Low / Medium / High Risk) for training and demonstration. This approach is explicitly acknowledged in the project charter (Section 6 — Risks/Limitations).
+
+In a production deployment, the same pipeline would ingest live data from:
+- GST Portal (`services.gst.gov.in`)
+- Udyam MSME Registration (`udyamregistration.gov.in`)
+- Marketplace seller APIs (Amazon, Flipkart, Myntra)
+- Payment gateway and invoice records
+
+---
+
+## Tech Stack
+
+| Component | Technology |
+|---|---|
+| Web UI | Streamlit |
+| ML Model | Random Forest (scikit-learn) |
+| Feature Engineering | Pandas / NumPy |
+| Explainability | Feature importance + direction analysis |
+| AI Reports | Llama 3 via Ollama (local, free) |
+| Charts | Plotly |
+
+No paid APIs. No cloud subscriptions. Runs entirely on your machine.
