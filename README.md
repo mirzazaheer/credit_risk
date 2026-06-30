@@ -15,7 +15,11 @@ An AI-powered credit risk screening tool for Indian e-commerce MSMEs using alter
 
 ---
 
-## Quick Start (3 steps)
+## Quick Start
+
+### Prerequisites
+- Python 3.10 or higher
+- Internet connection for first-time setup (Ollama ~200 MB + Llama 3 model ~4 GB)
 
 ### Step 1 — Install Python dependencies
 ```bash
@@ -27,29 +31,35 @@ pip install -r requirements.txt
 python setup.py
 ```
 This automatically:
-- Generates 1,200 synthetic MSME records
+- Generates 1,200 synthetic MSME training records
 - Trains the Random Forest credit risk model (~30 seconds)
-- Downloads Ollama to `bin/` (the local LLM runtime, ~200 MB)
-- Pulls the Llama 3 model (~4 GB, for AI narrative reports)
+- Downloads Ollama to `bin/` (LLM runtime, ~200 MB)
+- Pulls the Llama 3 model (~4 GB) for AI narrative reports
 
-To skip the Ollama/LLM step:
+To skip the LLM step (app still works, uses rule-based reports):
 ```bash
 python setup.py --skip-ollama
 ```
 
-### Step 3 — Start Ollama server and launch the app
-```bash
-# Terminal 1 — keep this running
-bin/ollama serve
+### Step 3 — Launch the app
 
-# Terminal 2
+**macOS / Linux:**
+```bash
+bin/ollama serve          # Terminal 1 — keep open
+streamlit run app.py      # Terminal 2
+```
+
+**Windows:**
+```bat
+bin\ollama.exe serve
 streamlit run app.py
 ```
+
 Open **http://localhost:8501** in your browser.
 
-> If Ollama is already installed system-wide, just run `ollama serve` instead of `bin/ollama serve`.
+> If Ollama is already installed system-wide, use `ollama serve` instead of `bin/ollama serve`.
 
-> Without Ollama running, the app still works fully — it falls back to a structured rule-based credit report automatically.
+> Without Ollama running the app still works — it falls back to a structured rule-based credit report automatically.
 
 ---
 
