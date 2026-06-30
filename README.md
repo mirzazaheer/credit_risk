@@ -3,6 +3,8 @@
 
 An AI-powered credit risk screening tool for Indian e-commerce MSMEs. Uses alternative data signals — GST compliance, marketplace performance, and payment behaviour — to produce a credit risk score, explainable factors, and a human-readable lending recommendation.
 
+For full architecture, algorithm details, module reference, and performance metrics, see [TECHNICAL.md](TECHNICAL.md).
+
 ---
 
 ## What It Does
